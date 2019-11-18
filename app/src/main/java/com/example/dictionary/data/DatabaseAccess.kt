@@ -24,7 +24,8 @@ class DatabaseAccess(context: Context, databaseName: String) : SQLiteAssetHelper
             do {
                 val id = cursor.getInt(0)
                 val word = cursor.getString(1)
-                result.add(Word(id, word, null))
+                val content = cursor.getString(2)
+                result.add(Word(id, word, content))
             }while (cursor.moveToNext())
         }
 

@@ -14,12 +14,20 @@
         android:orientation="vertical">
 
         <TextView
-            android:textColor="#2196F3"
+            android:textStyle="bold"
             android:padding="10dp"
             android:textSize="20sp"
-            android:text="sdadadsa"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/item_word"/>
+
+        <TextView
+            android:padding="10dp"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/item_content"/>
+
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -1,5 +1,6 @@
 package com.example.dictionary.ui.home
 
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +18,11 @@ class WordAdapter : BaseAdapter() {
         val view = LayoutInflater.from(parent?.context).inflate(R.layout.item, parent, false)
 
         val itemWord = view.findViewById<TextView>(R.id.item_word)
+        val itemContent = view.findViewById<TextView>(R.id.item_content)
+
         itemWord.setText(words.get(position).word)
+        // code...
+        itemContent.setText(Html.fromHtml(words.get(position)?.content, Html.FROM_HTML_MODE_COMPACT))
 
         return view
     }

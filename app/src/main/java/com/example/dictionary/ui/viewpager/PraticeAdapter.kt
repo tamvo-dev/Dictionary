@@ -26,7 +26,7 @@ class PraticeAdapter : PagerAdapter(){
         val content = view.findViewById<TextView>(R.id.pager_content)
 
         word.setText(vocabularys[position].word)
-        content.setText(Html.fromHtml(vocabularys[position].content, Html.FROM_HTML_MODE_COMPACT))
+        content.setText(Html.fromHtml(vocabularys[position].content, Html.FROM_HTML_OPTION_USE_CSS_COLORS))
         container.addView(view)
         return view
     }
