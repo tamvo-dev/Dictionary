@@ -15,9 +15,9 @@ class DatabaseAccess(context: Context, databaseName: String) : SQLiteAssetHelper
 )  {
     private val tableName = databaseName.replace(".db", "")
 
-    fun getAllData() : List<Word> {
+    fun getAllData(position: Int) : List<Word> {
         val result = mutableListOf<Word>()
-        val query = "SELECT * FROM $tableName LIMIT 200;"
+        val query = "SELECT * FROM $tableName where id > $position LIMIT 50;"
         val cursor = readableDatabase.rawQuery(query, null)
 
         if (cursor.moveToFirst()){
@@ -42,7 +42,8 @@ class DatabaseAccess(context: Context, databaseName: String) : SQLiteAssetHelper
             do {
                 val id = cursor.getInt(0)
                 val word = cursor.getString(1)
-                result.add(Word(id, word, null))
+                val content = cursor.getString(2)
+                result.add(Word(id, word, content))
             }while (cursor.moveToNext())
         }
 

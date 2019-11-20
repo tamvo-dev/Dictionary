@@ -5,18 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:textSize="20sp"
-        android:id="@+id/detail_word"
+    <WebView
+        android:id="@+id/detail_web"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp" />
-
-    <TextView
-        android:layout_marginTop="10dp"
-        android:id="@+id/detail_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp" />
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

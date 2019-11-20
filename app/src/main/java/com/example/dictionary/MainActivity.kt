@@ -6,17 +6,21 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import com.example.dictionary.data.DATABASE_ANH_VIET
+import com.example.dictionary.data.DATABASE_VIET_ANH
+import com.example.dictionary.data.DatabaseAccess
 import com.example.dictionary.models.Word
 import com.example.dictionary.ui.detail.DetailFragment
 import com.example.dictionary.ui.detail.DetailViewModel
+import com.example.dictionary.ui.flashcard.FlashCardFragment
 import com.example.dictionary.ui.home.HomeFragment
-import com.example.dictionary.ui.home.HomeViewModel
-import com.example.dictionary.ui.viewpager.ViewFragment
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
-import org.koin.android.ext.android.inject
-import org.koin.android.viewmodel.ext.android.viewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
 
 class MainActivity : AppCompatActivity(),
     NavigationView.OnNavigationItemSelectedListener {
@@ -27,13 +31,15 @@ class MainActivity : AppCompatActivity(),
 
     lateinit var drawerToggle: ActionBarDrawerToggle
 
-    private val homeFragment: HomeFragment by inject()
-    private val detailFragment: DetailFragment by inject()
-    private val mainViewModel: MainViewModel by viewModel()
+    private lateinit var databaseEngVie: DatabaseAccess
+    private lateinit var databaseVieEng: DatabaseAccess
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        databaseEngVie = DatabaseAccess(this@MainActivity, DATABASE_ANH_VIET)
+        databaseVieEng = DatabaseAccess(this@MainActivity, DATABASE_VIET_ANH)
 
         setSupportActionBar(tool_bar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -50,6 +56,7 @@ class MainActivity : AppCompatActivity(),
         main_navigation.setNavigationItemSelectedListener(this)
         main_navigation.setCheckedItem(0)
 
+        val homeFragment = HomeFragment(databaseEngVie)
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, homeFragment).commit()
     }
 
@@ -73,30 +80,42 @@ class MainActivity : AppCompatActivity(),
 
         when(p0.itemId){
             R.id.nav_home -> {
+                val homeFragment = HomeFragment(databaseEngVie)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, homeFragment)
-                    .addToBackStack(null)
                     .commit()
             }
 
-           R.id.nav_detail -> {
-               supportFragmentManager.beginTransaction()
-                   .replace(R.id.fragment_container, ViewFragment())
-                   .addToBackStack(null)
-                   .commit()
-           }
+            R.id.nav_viet_eng -> {
+                val homeFragment = HomeFragment(databaseVieEng)
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, homeFragment)
+                    .commit()
+            }
+
+            R.id.nav_your_words -> {
+                val flashCardFragment = FlashCardFragment(databaseEngVie)
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, flashCardFragment)
+                    .commit()
+            }
         }
 
         main_drawerLayout.closeDrawers()
         return true
     }
 
-    override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount > 0){
-            supportFragmentManager.popBackStack()
-        }else{
-            super.onBackPressed()
-        }
+    fun showDetailWord(word: Word) {
+
+        val detailViewModel = ViewModelProviders.of(this).get(DetailViewModel::class.java)
+
+        detailViewModel.passWord(word)
+        Log.e("TAG: Main", detailViewModel.toString())
+        val detailFragment = DetailFragment()
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, detailFragment)
+            .commit()
     }
 
 }

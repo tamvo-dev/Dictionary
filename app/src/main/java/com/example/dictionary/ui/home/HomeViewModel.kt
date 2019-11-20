@@ -27,6 +27,7 @@ class HomeViewModel(private val databaseAccess: DatabaseAccess) : ViewModel() {
         get() = _isLoading
 
     private val scope = CoroutineScope(Dispatchers.Main)
+    private var currentPos = 0
 
     init {
         loadData()
@@ -37,7 +38,7 @@ class HomeViewModel(private val databaseAccess: DatabaseAccess) : ViewModel() {
 
         val task = async(Dispatchers.Default) {
             try {
-                Result(databaseAccess.getAllData(), null)
+                Result(databaseAccess.getAllData(currentPos), null)
             }catch (e: Throwable){
                 Result(null, e)
             }
@@ -50,6 +51,7 @@ class HomeViewModel(private val databaseAccess: DatabaseAccess) : ViewModel() {
         }else if (result.error != null){
             Log.e(TAG, result.error.toString())
         }
+        currentPos += 50
         _isLoading.value = View.GONE
     }
 

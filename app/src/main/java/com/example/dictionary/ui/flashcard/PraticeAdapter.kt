@@ -1,4 +1,4 @@
-package com.example.dictionary.ui.viewpager
+package com.example.dictionary.ui.flashcard
 
 import android.text.Html
 import android.view.LayoutInflater

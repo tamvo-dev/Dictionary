@@ -1,19 +1,27 @@
 package com.example.dictionary.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import android.widget.ListView
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.*
+import androidx.lifecycle.ViewModelProviders
+import com.example.dictionary.MainActivity
 import com.example.dictionary.R
-import org.koin.android.viewmodel.ext.android.viewModel
+import com.example.dictionary.data.DATABASE_ANH_VIET
+import com.example.dictionary.data.DatabaseAccess
 
-class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
+
+class HomeFragment(private val database: DatabaseAccess) : Fragment(), SearchView.OnQueryTextListener {
 
     companion object{
         val TAG = "HomeFragment"
@@ -24,7 +32,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
     lateinit var adapter: WordAdapter
     lateinit var progressBar: ProgressBar
 
-    private val homeViewModel by viewModel<HomeViewModel>()
+    private lateinit var homeViewModel: HomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,6 +44,13 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
         listView = view.findViewById(R.id.home_listView)
         searchView = view.findViewById(R.id.home_searchView)
         progressBar = view.findViewById(R.id.home_progressBar)
+
+        val factory = object : Factory{
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return HomeViewModel(database) as T
+            }
+        }
+        homeViewModel = factory.create(HomeViewModel::class.java)
 
         adapter = WordAdapter()
         listView.adapter = adapter
@@ -49,17 +64,38 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
         })
 
         listView.setOnItemClickListener { parent, view, position, id ->
-            val wordId = adapter.getItem(position).id
-            val word = homeViewModel.selectWord(wordId)
+            val word = adapter.getItem(position)
+            (activity as MainActivity).showDetailWord(word)
         }
 
         searchView.setOnQueryTextListener(this)
+        listView.setOnScrollListener(object : AbsListView.OnScrollListener {
+
+            var isScroll = false
+
+            override fun onScroll(
+                view: AbsListView?,
+                firstVisibleItem: Int,
+                visibleItemCount: Int,
+                totalItemCount: Int
+            ) {
+                if(isScroll && totalItemCount == firstVisibleItem + visibleItemCount){
+                    homeViewModel.loadData()
+                    isScroll = false
+                }
+            }
+
+            override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {
+                isScroll = true
+            }
+
+        })
 
         return view
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return false
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {

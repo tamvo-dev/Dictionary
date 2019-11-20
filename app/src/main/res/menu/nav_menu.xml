@@ -6,10 +6,37 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:title="Home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="English-Vietnamese"
             android:id="@+id/nav_home"/>
         <item
-            android:title="Detail"
-            android:id="@+id/nav_detail"/>
+            android:icon="@drawable/ic_assignment_black_24dp"
+            android:title="English-English"
+            android:id="@+id/nav_eng_eng"/>
+        <item
+            android:icon="@drawable/ic_create_black_24dp"
+            android:title="Vietnamese-English"
+            android:id="@+id/nav_viet_eng"/>
+        <item
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:title="Favorites"
+            android:id="@+id/nav_favorites"/>
+        <item
+            android:icon="@drawable/ic_event_note_black_24dp"
+            android:title="Your Words"
+            android:id="@+id/nav_your_words"/>
     </group>
+
+    <item android:title="Communication">
+        <menu>
+            <item
+                android:icon="@drawable/ic_share_black_24dp"
+                android:title="Share"/>
+
+            <item
+                android:icon="@drawable/ic_live_help_black_24dp"
+                android:title="help"/>
+        </menu>
+    </item>
 </menu>
+
