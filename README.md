@@ -1,5 +1,4 @@
 # Dictionary
-## Một số hình ảnh của app:
 
 ## Các tính năng đã làm:
   * Load dữ liệu dưới nền để tránh bị treo app.
